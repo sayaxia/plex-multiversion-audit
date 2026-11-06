@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-written fixture that mirrors the real anomaly shapes found in the
+  section-25 audit. Keep one item per class; selftest.py asserts the mapping.
+  Sizes are bytes, durations are milliseconds - same units Plex returns.
+-->
+<MediaContainer size="10" librarySectionID="25" librarySectionTitle="学习资料">
+  <!-- SEG: 8K VR split into three chunks, each became its own "version" -->
+  <Video ratingKey="1001" type="movie" title="SEG-3media" year="2025"
+         guid="com.plexapp.agents.metatube://FANZA:seg00001?lang=zh"
+         addedAt="1750000000" updatedAt="1750000000">
+    <Media id="9001" duration="1626000" width="8192" height="4096"
+           videoCodec="hevc" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/seg-1/seg00001_1_8k.mp4" size="4000000000" duration="1626000"/>
+    </Media>
+    <Media id="9002" duration="1776000" width="8192" height="4096"
+           videoCodec="hevc" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/seg-1/seg00001_2_8k.mp4" size="4300000000" duration="1776000"/>
+    </Media>
+    <Media id="9003" duration="2010000" width="8192" height="4096"
+           videoCodec="hevc" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/seg-1/seg00001_3_8k.mp4" size="5200000000" duration="2010000"/>
+    </Media>
+  </Video>
+
+  <!-- SEG: A/B halves, both 1080p, durations add up to one movie -->
+  <Video ratingKey="1002" type="movie" title="SEG-ab" year="2021"
+         guid="com.plexapp.agents.metatube://FANZA:seg00002?lang=zh"
+         addedAt="1750000100" updatedAt="1750000100">
+    <Media id="9011" duration="8100000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/迅雷/下载/SEG-00002/SEG-00002-A.mp4" size="6100000000" duration="8100000"/>
+    </Media>
+    <Media id="9012" duration="6186000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/迅雷/下载/SEG-00002/SEG-00002-B.mp4" size="4650000000" duration="6186000"/>
+    </Media>
+  </Video>
+
+  <!-- DUP: same basename on two volumes, sizes within 0.1% -->
+  <Video ratingKey="1003" type="movie" title="DUP-copy" year="2019"
+         guid="com.plexapp.agents.metatube://FANZA:dup00001?lang=zh"
+         addedAt="1750000200" updatedAt="1750000200">
+    <Media id="9021" duration="7176000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/DUP-001/DUP-001.mp4" size="5400000000" duration="7176000"/>
+    </Media>
+    <Media id="9022" duration="7182000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volumeUSB2/usbshare/Data/未分类/DUP-001/DUP-001.mp4" size="5401000000" duration="7182000"/>
+    </Media>
+  </Video>
+
+  <!-- BADGE: censored vs uncensored, same runtime -->
+  <Video ratingKey="1004" type="movie" title="BADGE-mixed" year="2024"
+         guid="com.plexapp.agents.metatube://FANZA:bdg00001?lang=zh"
+         addedAt="1750000300" updatedAt="1750000300">
+    <Media id="9031" duration="7200000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/BDG-001/BDG-001.mp4" size="6000000000" duration="7200000"/>
+    </Media>
+    <Media id="9032" duration="7200000" width="1920" height="1080"
+           videoCodec="hevc" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/BDG-001-UC/BDG-001-UC.mp4" size="9000000000" duration="7200000"/>
+    </Media>
+  </Video>
+
+  <!-- RES: 4K + 1080p of the same cut -->
+  <Video ratingKey="1005" type="movie" title="RES-quality" year="2023"
+         guid="com.plexapp.agents.metatube://FANZA:res00001?lang=zh"
+         addedAt="1750000400" updatedAt="1750000400">
+    <Media id="9041" duration="6600000" width="3840" height="2160"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/迅雷/下载/res-4k/res-4k.mp4" size="18000000000" duration="6600000"/>
+    </Media>
+    <Media id="9042" duration="6600000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volumeUSB2/usbshare/Data/未分类/res/res.mp4" size="4800000000" duration="6600000"/>
+    </Media>
+  </Video>
+
+  <!-- PARTS: one Media, two Parts -> normal CD1/CD2 split -->
+  <Video ratingKey="1006" type="movie" title="PARTS-normal" year="2020"
+         guid="com.plexapp.agents.metatube://FANZA:prt00001?lang=zh"
+         addedAt="1750000500" updatedAt="1750000500">
+    <Media id="9051" duration="28800000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/PRT-001/PRT-001.part1.mp4" size="10000000000" duration="14400000"/>
+      <Part file="/volume1/Data/亚洲/PRT-001/PRT-001.part2.mp4" size="10000000000" duration="14400000"/>
+    </Media>
+  </Video>
+
+  <!-- SINGLE: nothing to report -->
+  <Video ratingKey="1007" type="movie" title="SINGLE-plain" year="2022"
+         guid="com.plexapp.agents.metatube://FANZA:sgl00001?lang=zh"
+         addedAt="1750000600" updatedAt="1750000600">
+    <Media id="9061" duration="5400000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/SGL-001/SGL-001.mp4" size="3000000000" duration="5400000"/>
+    </Media>
+  </Video>
+
+  <!-- ODD: same cut, one file 20% shorter, no A/B naming -> truncated rip,
+       not a segment. Must NOT be classified as SEG. -->
+  <Video ratingKey="1010" type="movie" title="ODD-short" year="2024"
+         guid="com.plexapp.agents.metatube://FANZA:odd00001?lang=zh"
+         addedAt="1750000900" updatedAt="1750000900">
+    <Media id="9091" duration="7098000" width="1920" height="1080"
+           videoCodec="hevc" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/ODD-001/ODD-001.mp4" size="4400000000" duration="7098000"/>
+    </Media>
+    <Media id="9092" duration="5736000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/ODD-001-C/ODD-001-C.mp4" size="6300000000" duration="5736000"/>
+    </Media>
+  </Video>
+
+  <!-- UNMERGED: same GUID, two separate items -->
+  <Video ratingKey="1008" type="movie" title="UNM-001" year="2023"
+         guid="com.plexapp.agents.metatube://FANZA:unm00001?lang=zh"
+         addedAt="1750000700" updatedAt="1750000700">
+    <Media id="9071" duration="6000000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/迅雷/下载/unm-001-C/unm-001-C.mp4" size="5000000000" duration="6000000"/>
+    </Media>
+  </Video>
+  <Video ratingKey="1009" type="movie" title="UNM-001" year="2023"
+         guid="com.plexapp.agents.metatube://FANZA:unm00001?lang=zh"
+         addedAt="1750000800" updatedAt="1750000800">
+    <Media id="9081" duration="6000000" width="1920" height="1080"
+           videoCodec="h264" audioCodec="aac" container="mp4">
+      <Part file="/volume1/Data/亚洲/UNM-001-UC/UNM-001-UC.mp4" size="5200000000" duration="6000000"/>
+    </Media>
+  </Video>
+</MediaContainer>

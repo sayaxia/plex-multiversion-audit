@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+_selftest_out*
+dump/
+*.local.json
+.plex-audit.json
+config.json
