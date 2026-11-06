@@ -66,7 +66,7 @@ reclaimable duplicate space: 19.9 GB
 ```bash
 # 完整报告
 python scripts/plex_audit.py report -s 25 -o 学习资料-多版本条目报告.md \
-    --title "「学习资料」多版本检查" --host-note "192.168.100.222:32400" \
+    --title "「学习资料」多版本检查" --host-note "192.168.1.10:32400" \
     --section-note "section 25 · 13 个路径" --date-note "2026-11-07"
 
 # 先存一份快照，之后离线可复现
@@ -99,9 +99,9 @@ python scripts/plex_audit.py scan --offline dump/
 
 ```json
 {
-  "plex_url": "http://192.168.100.222:32400",
-  "prefs_path": "//192.168.100.221/Plex/Library/Application Support/Plex Media Server/Preferences.xml",
-  "sections": ["25"],
+  "plex_url": "http://192.168.1.10:32400",
+  "prefs_path": "",
+  "sections": ["1"],
   "timeout": 180
 }
 ```

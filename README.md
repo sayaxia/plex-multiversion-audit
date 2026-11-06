@@ -26,9 +26,9 @@ SINGLE    普通单版本                       3148   17091.7 GB
 reclaimable duplicate space: 19.9 GB
 
 -- SEG (3) --
-  41733   FC2-4985867 【无】《7日间限定》…            [23/23/23/79 min] !分段命名,时长偏短
-  22880   HUNTA-972 性感的黑内裤姿态爆发！…            [135/103 min] !分段命名,时长偏短
-  41572   JUVR-254 【VR】我被公司最温柔的女上司…      [27/30/33 min]
+  41733   SAMPLE-001 主片 + 3 个特典              [23/23/23/79 min] !分段命名,时长偏短
+  22880   SAMPLE-002 上半 + 下半                   [135/103 min] !分段命名,时长偏短
+  41572   SAMPLE-003 VR 三段                     [27/30/33 min]
 ```
 
 ## 分类与动作
@@ -60,19 +60,26 @@ reclaimable duplicate space: 19.9 GB
 
 ```text
 把 https://github.com/sayaxia/plex-multiversion-audit 安装成我的 WorkBuddy skill。
-这是私有仓库，需要先用我的 GitHub 凭证克隆。
+公开仓库，直接 git clone 即可，不需要 token。
 
 1. 克隆到 %USERPROFILE%\.workbuddy\skills\plex-multiversion-audit
    （macOS/Linux 换成 ~/.workbuddy/skills/plex-multiversion-audit），不要克隆到临时目录。
 2. 复制 config.example.json 为 config.json，把 plex_url 改成我的 Plex 地址
-   （例如 http://192.168.100.222:32400）。
+   （例如 http://192.168.1.10:32400）。
    prefs_path 留空即可：脚本会按 plex_url 的主机名推导 SMB 路径读 Preferences.xml 拿 token。
 3. 运行 python scripts/selftest.py，必须 8/8 通过，不通过就报错给我，不要改测试用例。
-4. 运行 python scripts/plex_audit.py scan -s <我的媒体库名>，把分类统计结果贴出来。
+4. 运行 python scripts/plex_audit.py scan -s <库名，例如 学习资料>，把分类统计结果贴出来。
 5. 这个工具是只读的：不要改任何文件名、不要删文件、不要触发 Plex 重扫。
 ```
 
-Agent 装完你应该能直接说「检查一下学习资料库里的多版本条目」触发它。
+Agent 装完你应该能直接说「检查一下某个库里的多版本条目」触发它。
+
+已经在用的机器更新到最新版：
+
+```bash
+git -C ~/.workbuddy/skills/plex-multiversion-audit pull
+python ~/.workbuddy/skills/plex-multiversion-audit/scripts/selftest.py
+```
 
 ### 手动安装
 
@@ -86,7 +93,7 @@ python scripts/plex_audit.py scan -s 电影
 ```
 
 `config.json` 已在 `.gitignore` 里，克隆下来是空的 —— 这是故意的：地址、SMB 路径这类
-环境信息留在本地，不进版本库。仓库设为私有，代码本身不含任何密钥或令牌。
+环境信息留在本地，不进版本库；仓库是公开的，代码本身不含任何密钥或令牌。
 
 ## 配置
 
