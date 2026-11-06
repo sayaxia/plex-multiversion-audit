@@ -51,22 +51,50 @@ reclaimable duplicate space: 19.9 GB
 ## 安装
 
 无第三方依赖，Python 3.6+（也兼容 2.7）。把仓库放到
-`~/.workbuddy/skills/plex-multiversion-audit/` 即可作为 WorkBuddy skill 使用
-（入口是 `SKILL.md`）。
+`~/.workbuddy/skills/plex-multiversion-audit/`（Windows 是
+`C:\Users\<你>\.workbuddy\skills\plex-multiversion-audit\`），入口是 `SKILL.md`。
+
+### 让 Agent 自己装（复制这段提示词）
+
+把下面整段丢给 WorkBuddy / Claude Code 这类能读写本地文件的 Agent 即可：
+
+```text
+把 https://github.com/sayaxia/plex-multiversion-audit 安装成我的 WorkBuddy skill。
+这是私有仓库，需要先用我的 GitHub 凭证克隆。
+
+1. 克隆到 %USERPROFILE%\.workbuddy\skills\plex-multiversion-audit
+   （macOS/Linux 换成 ~/.workbuddy/skills/plex-multiversion-audit），不要克隆到临时目录。
+2. 复制 config.example.json 为 config.json，把 plex_url 改成我的 Plex 地址
+   （例如 http://192.168.100.222:32400）。
+   prefs_path 留空即可：脚本会按 plex_url 的主机名推导 SMB 路径读 Preferences.xml 拿 token。
+3. 运行 python scripts/selftest.py，必须 8/8 通过，不通过就报错给我，不要改测试用例。
+4. 运行 python scripts/plex_audit.py scan -s <我的媒体库名>，把分类统计结果贴出来。
+5. 这个工具是只读的：不要改任何文件名、不要删文件、不要触发 Plex 重扫。
+```
+
+Agent 装完你应该能直接说「检查一下学习资料库里的多版本条目」触发它。
+
+### 手动安装
 
 ```bash
-cp config.example.json config.json   # 改成自己的地址
-python scripts/selftest.py           # 8 个离线用例，先确认环境
+git clone https://github.com/sayaxia/plex-multiversion-audit.git \
+    ~/.workbuddy/skills/plex-multiversion-audit
+cd ~/.workbuddy/skills/plex-multiversion-audit
+cp config.example.json config.json    # 改成自己的 plex_url
+python scripts/selftest.py            # 8 个离线用例，先确认环境
 python scripts/plex_audit.py scan -s 电影
 ```
+
+`config.json` 已在 `.gitignore` 里，克隆下来是空的 —— 这是故意的：地址、SMB 路径这类
+环境信息留在本地，不进版本库。仓库设为私有，代码本身不含任何密钥或令牌。
 
 ## 配置
 
 ```json
 {
-  "plex_url": "http://192.168.100.222:32400",
-  "prefs_path": "//192.168.100.221/Plex/Library/Application Support/Plex Media Server/Preferences.xml",
-  "sections": ["25"],
+  "plex_url": "http://192.168.1.10:32400",
+  "prefs_path": "",
+  "sections": ["1"],
   "timeout": 180
 }
 ```
