@@ -124,6 +124,68 @@ def _badge():
     fails(core.badge_of('/a/ABF-032.mp4') == '', 'plain')
     fails(core.badge_of('/a/SSIS983C.mp4') == '', 'glued C is not a badge')
     fails(core.badge_of('/a/x-uncensored.mkv') == 'UNCENSORED', 'uncensored')
+    fails(core.badge_of('/a/ABF-032_LTX.mp4') == 'LTX', 'underscore LTX')
+    fails(core.badge_of('/a/ABF-032__restored.mp4') == 'RESTORED',
+          'doubled separator restored')
+    fails(core.badge_of('/a/ABF-032-restored.mp4') == 'RESTORED', 'restored')
+    fails(core.badge_of('/a/ABF-032_LTX__restored.mp4') == 'RESTORED',
+          'LTX then restored')
+    return 'ok'
+
+
+def _item_with(*files):
+    """Two same-length versions of one item, used by the version-class tests."""
+    medias = []
+    for path in files:
+        medias.append({
+            'id': '', 'duration': 7200000, 'bitrate': 0,
+            'width': 1920, 'height': 1080, 'videoCodec': 'h264',
+            'audioCodec': '', 'container': '',
+            'parts': [{'file': path, 'size': 4000000000,
+                       'duration': 7200000}],
+        })
+    return {'key': 'x', 'section': '25', 'title': 'x', 'year': '',
+            'guid': '', 'medias': medias}
+
+
+@case('badge_class: all uncensored spellings collapse to U')
+def _badge_class():
+    for tag in ('U', 'UNCENSORED', 'LTX', 'RESTORED', 'BASICVSR',
+                'BASICVSR++'):
+        fails(core.badge_class(tag) == 'U',
+              '%s must collapse to U' % tag)
+    fails(core.badge_class('C') == 'C', 'C')
+    fails(core.badge_class('CH') == 'C', 'CH')
+    fails(core.badge_class('UC') == 'UC', 'UC must stay a separate class')
+    fails(core.badge_class('') == '', 'no badge')
+    return 'ok'
+
+
+@case('classify: U vs LTX vs restored is NOT a mixed badge')
+def _same_version():
+    same_class = (
+        ('/v/ABP-321-U.mp4', '/v/ABP-321-LTX.mp4'),
+        ('/v/ABP-321_U.mp4', '/v/ABP-321__restored.mp4'),
+        ('/v/ABP-321-BASICVSR++.mp4', '/v/ABP-321-UNCENSORED.mp4'),
+        ('/v/ABP-321-LTX__restored.mp4', '/v/ABP-321-U.mp4'),
+    )
+    for left, right in same_class:
+        item = _item_with(left, right)
+        fails(core.classify(item) != 'BADGE',
+              '%s + %s wrongly classified BADGE' % (left, right))
+        fails('混装版别' not in core.hint_flags(item),
+              '%s + %s wrongly flagged 混装版别' % (left, right))
+    different_class = (
+        ('/v/ABP-321-C.mp4', '/v/ABP-321-U.mp4'),
+        ('/v/ABP-321-UC.mp4', '/v/ABP-321-LTX.mp4'),
+        ('/v/ABP-321.mp4', '/v/ABP-321__restored.mp4'),
+    )
+    for left, right in different_class:
+        item = _item_with(left, right)
+        fails(core.classify(item) == 'BADGE',
+              '%s + %s should still be BADGE' % (left, right))
+        fails('混装版别' in core.hint_flags(item),
+              '%s + %s missing 混装版别' % (left, right))
     return 'ok'
 
 

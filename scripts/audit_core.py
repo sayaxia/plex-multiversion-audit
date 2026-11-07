@@ -17,8 +17,16 @@ import os
 import re
 
 # Same badge rule the MetaTube plug-in applies to the file stem.
-TAG_RE = re.compile(r'[-_\s](UNCENSORED|UC|C|CH|U|LTX|BASICVSR\+\+|BASICVSR)$',
-                    re.IGNORECASE)
+TAG_RE = re.compile(
+    r'[-_\s]+(UNCENSORED|UC|C|CH|U|LTX|RESTORED|BASICVSR\+\+|BASICVSR)$',
+    re.IGNORECASE)
+
+# Semantic version classes, matching utils.get_badge_type(). All of the
+# uncensored spellings map to u.png (or uc.png with a subtitle) and to the
+# same "无码破解" genre, so they are ONE version, not different versions.
+UNCENSORED_TAGS = frozenset(('U', 'UNCENSORED', 'LTX', 'RESTORED',
+                             'BASICVSR', 'BASICVSR++'))
+SUBTITLE_TAGS = frozenset(('C', 'CH'))
 
 # Basename patterns that suggest "this file is a piece of a bigger movie".
 # A/B/D only - a trailing C or U is a badge (-C 中文字幕 / -U 无码), not a
@@ -43,7 +51,7 @@ CLASS_LABEL = {
     'ODD': '时长异常（疑似残缺/剪辑版）',
     'UNMERGED': '同片多条目未合并',
     'DUP': '同文件重复（两份拷贝）',
-    'BADGE': '版别变体（C/UC/U/LTX）',
+    'BADGE': '版别变体（C/UC/无码破解 U 的角标不同）',
     'RES': '分辨率/编码变体',
     'PARTS': '单版本多 Part（正常分段）',
     'SINGLE': '普通单版本',
@@ -55,9 +63,26 @@ def gb(num):
 
 
 def badge_of(path):
+    """Literal suffix token, kept for the report's 版别 column."""
     stem = os.path.splitext(os.path.basename(path or ''))[0]
     match = TAG_RE.search(stem)
     return match.group(1).upper() if match else ''
+
+
+def badge_class(tag):
+    """Collapse spelling variants onto the version class Plex actually shows.
+
+    -U / -LTX / _LTX / __restored / -BasicVSR++ all mean 无码破解 and share
+    u.png. Treating them as distinct made two copies of the same uncensored
+    release look like a "混装版别" anomaly. UC (uc.png) and C/CH (zimu.png)
+    stay separate because those really do render different badges.
+    """
+    tag = (tag or '').upper()
+    if tag in UNCENSORED_TAGS:
+        return 'U'
+    if tag in SUBTITLE_TAGS:
+        return 'C'
+    return tag
 
 
 def split_hint(path):
@@ -178,7 +203,7 @@ def classify(item):
         if spread < DUP_SIZE_TOL:
             return 'DUP'
 
-    if len(set(r['badge'] for r in rows)) > 1:
+    if len(set(badge_class(r['badge']) for r in rows)) > 1:
         return 'BADGE'
     return 'RES'
 
@@ -197,7 +222,7 @@ def hint_flags(item):
     flags = []
     if len(rows) > 1 and any(split_hint(r['basename']) for r in rows):
         flags.append('分段命名')
-    if len(set(r['badge'] for r in rows)) > 1:
+    if len(set(badge_class(r['badge']) for r in rows)) > 1:
         flags.append('混装版别')
     if len(rows) > 1:
         longest = max(r['duration'] for r in rows) or 0
@@ -331,7 +356,9 @@ def build_report(pairs, dup_guids, meta):
         '先确认短的那个是否能完整播放，再决定删掉还是重新下载。')
     add('4. **DUP**：同名同体积的两份文件删掉任一份即可，不影响播放。')
     add('5. **BADGE / RES**：正常多版本，不要动。注意一个 movie 只有一张海报和'
-        '一个角标，同条目内混装 `-C` 与 `-UC/-U` 时角标必然只能对应其中一个版本。')
+        '一个角标，同条目内混装不同角标类别（`-C` 中文字幕 / `-UC` 中文无码 / '
+        '`-U` 无码破解）时角标必然只能对应其中一个版本。`-U`、`-LTX`、`_LTX`、'
+        '`__restored`、`-BasicVSR++` 同属「无码破解」、共用 `u.png`，不算混装版别。')
     add('6. **PARTS**：正常。只有画质明显偏低（如 720p 以下）才考虑换源。')
     add('')
     return '\n'.join(lines)
