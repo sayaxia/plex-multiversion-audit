@@ -54,9 +54,29 @@ reclaimable duplicate space: 19.9 GB
 `~/.workbuddy/skills/plex-multiversion-audit/`（Windows 是
 `C:\Users\<你>\.workbuddy\skills\plex-multiversion-audit\`），入口是 `SKILL.md`。
 
-### 让 Agent 自己装（复制这段提示词）
+**这个工具全程只读**：不改文件名、不删文件、不调用 Plex 的扫描 / 刷新元数据接口。
+报告只会列出「建议怎么改」，动手永远是人的事。
 
-把下面整段丢给 WorkBuddy / Claude Code 这类能读写本地文件的 Agent 即可：
+### 让 Agent 自己装
+
+复制这一段丢给 WorkBuddy / Claude Code 这类能读写本地文件的 Agent：
+
+```text
+把 https://github.com/sayaxia/plex-multiversion-audit clone 成我的 WorkBuddy skill（装到
+~/.workbuddy/skills/plex-multiversion-audit，Windows 用 %USERPROFILE%\.workbuddy\skills\），
+然后严格按它 README 的「安装」章节配好 config.json 并跑通 scripts/selftest.py，
+再对 <库名> 库执行一次 scan，把分类统计贴给我。
+README 缺失或与实际不符就停下来问我，不要自己猜。
+```
+
+一句就够，是因为路径、config、`8/8` 门槛、只读约束、`git pull` 更新全在本文档里写着，
+Agent 克隆完就能读到，不必在提示词里复述一遍。你只需要替换 `<库名>`。
+
+装完之后，直接说「检查一下某个库里的多版本条目」就能触发它。
+
+#### 严格模式（无人值守，或不想让它自己判断时）
+
+把每一步钉死、不给解读空间的版本：
 
 ```text
 把 https://github.com/sayaxia/plex-multiversion-audit 安装成我的 WorkBuddy skill。
@@ -71,8 +91,6 @@ reclaimable duplicate space: 19.9 GB
 4. 运行 python scripts/plex_audit.py scan -s <库名，例如 学习资料>，把分类统计结果贴出来。
 5. 这个工具是只读的：不要改任何文件名、不要删文件、不要触发 Plex 重扫。
 ```
-
-Agent 装完你应该能直接说「检查一下某个库里的多版本条目」触发它。
 
 已经在用的机器更新到最新版：
 
