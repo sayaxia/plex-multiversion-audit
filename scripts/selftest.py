@@ -130,6 +130,12 @@ def _badge():
     fails(core.badge_of('/a/ABF-032-restored.mp4') == 'RESTORED', 'restored')
     fails(core.badge_of('/a/ABF-032_LTX__restored.mp4') == 'RESTORED',
           'LTX then restored')
+    fails(core.badge_of('/a/JUR-110_restored_wm.mp4') == 'RESTORED',
+          'watermark mark after restored')
+    fails(core.badge_of('/a/SONE-521_restored.LTX_wm.mp4') == 'LTX',
+          'dot separator + watermark mark')
+    fails(core.badge_of('/a/ABP-321_wm.mp4') == '',
+          'wm alone is not a badge')
     return 'ok'
 
 
@@ -168,6 +174,7 @@ def _same_version():
         ('/v/ABP-321_U.mp4', '/v/ABP-321__restored.mp4'),
         ('/v/ABP-321-BASICVSR++.mp4', '/v/ABP-321-UNCENSORED.mp4'),
         ('/v/ABP-321-LTX__restored.mp4', '/v/ABP-321-U.mp4'),
+        ('/v/ABP-321_restored_wm.mp4', '/v/ABP-321-U.mp4'),
     )
     for left, right in same_class:
         item = _item_with(left, right)

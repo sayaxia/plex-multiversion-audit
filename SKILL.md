@@ -93,7 +93,8 @@ python scripts/plex_audit.py scan --offline dump/
 > `-BasicVSR++` / `-UNCENSORED` 都是无码破解，共用 `u.png`（带中文字幕则 `uc.png`）
 > 和同一个「无码破解」类型标签，`badge_class()` 把它们归一成 `U`。所以
 > `X-U.mp4` + `X-LTX.mp4` **不是**混装版别；`X-C.mp4` + `X-U.mp4` 才是。
-> 报告「版别」列保留原始后缀，分类用归一后的值。
+> 角标后面可叠工具标记（`X_restored_wm`、`X_restored.LTX_wm`），正则取链上最后一个角标词元；
+> `wm` 单独出现不算角标。报告「版别」列保留原始后缀，分类用归一后的值。
 
 > ⚠ 一个 movie 在 Plex 里**只有一张海报、一个角标**。同一 item 内混装 `-C` 与 `-UC`
 > 时，角标必然只对应其中一个版本 —— 所以批量刷角标后出现「角标和正在播的版本不一致」

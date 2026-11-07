@@ -16,9 +16,17 @@ SEG     : several Media whose files are actually consecutive segments of one
 import os
 import re
 
-# Same badge rule the MetaTube plug-in applies to the file stem.
+# Same badge rule the MetaTube plug-in applies to the file stem. Tool marks
+# may follow the badge ("_wm", ".LTX"), so the badge need not be the last
+# token; a dot is a valid separator. WM alone is not a badge.
+_BADGE_TOKEN = (r'(UNCENSORED|UC|C|CH|U|LTX|RESTORED|'
+                r'BASICVSR\+\+|BASICVSR)')
+_TOOL_TOKEN = (r'(?:WM|UNCENSORED|UC|C|CH|U|LTX|RESTORED|'
+               r'BASICVSR\+\+|BASICVSR)')
+# Capture the LAST badge token in the chain (see utils.TRAILING_BADGE_TAG).
 TAG_RE = re.compile(
-    r'[-_\s]+(UNCENSORED|UC|C|CH|U|LTX|RESTORED|BASICVSR\+\+|BASICVSR)$',
+    r'[-_.\s]+(?:' + _TOOL_TOKEN + r'[-_.\s]+)*' + _BADGE_TOKEN +
+    r'(?:[-_.\s]+' + _TOOL_TOKEN + r')*$',
     re.IGNORECASE)
 
 # Semantic version classes, matching utils.get_badge_type(). All of the
